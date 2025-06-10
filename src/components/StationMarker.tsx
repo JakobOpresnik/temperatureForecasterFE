@@ -1,10 +1,11 @@
 import type { Forecast } from '../types/forecast';
-import { LineChart, lineElementClasses } from '@mui/x-charts';
+import { LineChart } from '@mui/x-charts';
 import type { StationRow } from '../types/supabase_rows';
 import { Marker, Popup } from 'react-leaflet';
 import { useMemo } from 'react';
 import CircularProgress from '@mui/joy/CircularProgress';
 import '../App.css';
+import { Table, Typography } from '@mui/joy';
 
 type StationMarkerProps = {
   station: StationRow;
@@ -68,26 +69,29 @@ const StationMarker = ({ station, forecasts }: StationMarkerProps) => {
   return (
     <Marker position={[station.latitude, station.longitude]}>
       <Popup className='popup'>
-        <h2>{station.name}</h2>
+        <Typography level='h3' sx={{ marginTop: 3 }}>
+          {station.name}
+        </Typography>
+        <Typography level='body-sm'>
+          {station.latitude}, {station.longitude}
+        </Typography>
         {tempAvg && tempMax && tempMin ? (
           <>
-            <h3>Stats for the last 9 hours:</h3>
-            <table>
-              <tbody>
-                <tr>
-                  <th>Average</th>
-                  <td>{tempAvg.toFixed(1)}°C</td>
-                </tr>
-                <tr>
-                  <th>Max</th>
-                  <td>{tempMax.toFixed(1)}°C</td>
-                </tr>
-                <tr>
-                  <th>Min</th>
-                  <td>{tempMin.toFixed(1)}°C</td>
-                </tr>
-              </tbody>
-            </table>
+            <Typography level='body-md'>Stats for the last 9 hours:</Typography>
+            <Table>
+              <tr>
+                <th>Average</th>
+                <th>{tempAvg.toFixed(1)}°C</th>
+              </tr>
+              <tr>
+                <th>Max</th>
+                <th>{tempMax.toFixed(1)}°C</th>
+              </tr>
+              <tr>
+                <th>Min</th>
+                <th>{tempMin.toFixed(1)}°C</th>
+              </tr>
+            </Table>
           </>
         ) : (
           <CircularProgress variant='soft' />
@@ -110,23 +114,18 @@ const StationMarker = ({ station, forecasts }: StationMarkerProps) => {
                 showMark: false,
               },
             ]}
-            sx={{
-              [`& .${lineElementClasses.root}`]: {
-                display: 'none',
-              },
-            }}
             yAxis={[
               {
                 min: Math.min(...chartData) * 0.4,
                 max: Math.max(...chartData) * 1.3,
-                label: '°C',
-                labelStyle: {
-                  color: 'white',
-                },
+                label: 'Temperature (°C)',
               },
             ]}
             height={300}
-            width={350}
+            width={550}
+            sx={{
+              paddingLeft: 30,
+            }}
           />
         )}
       </Popup>

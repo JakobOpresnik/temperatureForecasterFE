@@ -9,15 +9,16 @@ import StationMarker from './components/StationMarker';
 import { getStationsData } from './api/stations';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-// import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'assets/location_pin.png',
+  iconRetinaUrl,
   iconUrl,
   shadowUrl,
 });

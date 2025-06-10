@@ -29,26 +29,25 @@
 }
 
 div.leaflet-popup-content-wrapper,
-div.leaflet-popup-tip {
+div.leaflet-popup-tip,
+div.leaflet-popup-content {
   background: #d2ddf7;
+  width: 600px;
 }
 
 th,
 td {
   padding: 5px;
   border: 1px solid grey;
-  border-radius: 5px;
-  /* color: #fff; */
+}
+
+th {
+  margin: 10px;
 }
 
 table {
   margin-bottom: 20px;
 }
-
-/* h2,
-h3 {
-  color: #fff;
-} */
 
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
