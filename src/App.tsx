@@ -1,43 +1,27 @@
 import { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
-import supabase from './supabaseClient';
-import type { Database } from './types/supabase';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { LineChart } from '@mui/x-charts';
-type WeatherRow = Database['public']['Tables']['weather']['Row'];
-
-type Forecast = {
-  station: string;
-  predictions: number[];
-  actuals: number[];
-  timestamps: string[];
-};
-
-type StationMarkerProps = {
-  station: string;
-  latitude: number;
-  longitude: number;
-};
+import { API_BASE_URL } from './constants/apiClient';
+import type { StationRow } from './types/supabase_rows';
+import type { Forecast } from './types/forecast';
+import StationMarker from './components/StationMarker';
+import { getStationsData } from './api/stations';
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [data, setData] = useState<WeatherRow[]>([]);
+  // const [data, setData] = useState<WeatherRow[]>([]);
+  const [stations, setStations] = useState<StationRow[]>([]);
   const [models, setModels] = useState<string[]>([]);
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
 
   const getRegisteredModels = async () => {
     try {
-      const response: Response = await fetch(
-        'https://temperatureforecaster-production.up.railway.app/' /* 'http://localhost:8000/' */
-      );
+      const response: Response = await fetch(API_BASE_URL);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log('DATA: ', data);
+      console.log('data: ', data);
       setModels(data);
     } catch (err) {
       console.log(err);
@@ -47,7 +31,7 @@ function App() {
   const getTemperatureForecast = async (station: string) => {
     try {
       const response: Response = await fetch(
-        `https://temperatureforecaster-production.up.railway.app/predict/${station}`
+        `${API_BASE_URL}/predict/${station}`
       );
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
@@ -66,7 +50,8 @@ function App() {
     }
   };
 
-  const getData = async () => {
+  // testing fetching data from Supabase
+  /* const getData = async () => {
     const { data, error } = await supabase.from('weather').select('*').limit(5);
     if (error) {
       console.error('Supabase connection test failed:', error);
@@ -76,10 +61,33 @@ function App() {
     }
   };
 
-  console.log(data);
+  const getStationsData = async () => {
+    const { data, error } = await supabase.from('station').select('*');
+    if (error) {
+      console.error('Supabase connection test failed:', error);
+    } else {
+      console.log('Supabase connection test succeeded:', data);
+      setStations(data);
+    }
+  }; */
+
+  // console.log(data);
 
   useEffect(() => {
-    getData();
+    const fetchStations = async () => {
+      try {
+        const stationsResult = await getStationsData();
+        if (stationsResult) setStations(stationsResult);
+      } catch (err) {
+        console.error('Failed to fetch initial data: ', err);
+      }
+    };
+
+    fetchStations();
+  }, []);
+
+  useEffect(() => {
+    // getData();
     getRegisteredModels();
   }, []);
 
@@ -91,7 +99,7 @@ function App() {
 
   console.log('forecasts: ', forecasts);
 
-  function getNextTimestamps(start: string, count: number): string[] {
+  /* function getNextTimestamps(start: string, count: number): string[] {
     console.log('start: ', start);
     const [hours, minutes] = start.split(':').map(Number);
     const startDate = new Date();
@@ -107,69 +115,7 @@ function App() {
     }
 
     return timestamps;
-  }
-
-  const StationMarker = ({
-    station,
-    latitude,
-    longitude,
-  }: StationMarkerProps) => {
-    const forecast: Forecast | undefined = forecasts.find(
-      (forecast: Forecast) => forecast.station === station
-    );
-
-    /* const customIcon = new Icon({
-      iconUrl: 'assets/location_pin.png',
-      iconSize: [45, 45],
-    }); */
-
-    const chartData: number[] = [
-      ...(forecast?.actuals ?? []),
-      ...(forecast?.predictions ?? []),
-    ];
-
-    const forecastTimestamps: string[] = getNextTimestamps(
-      forecast?.timestamps[17] ?? '',
-      6
-    );
-
-    console.log('timestamps forecast: ', forecastTimestamps);
-    console.log([...(forecast?.timestamps ?? []), ...forecastTimestamps]);
-
-    return (
-      <Marker position={[latitude, longitude]}>
-        <Popup>
-          <h3>{station}</h3>
-          {forecast?.predictions?.map(
-            (value: number) => `${value.toFixed(1)}°C`
-          )}
-          {forecast?.timestamps && (
-            <LineChart
-              series={[
-                {
-                  data: chartData,
-                  area: true,
-                },
-              ]}
-              /* xAxis={[
-                {
-                  data: [...forecast.timestamps, ...forecastTimestamps],
-                },
-              ]} */
-              yAxis={[
-                {
-                  min: Math.min(...chartData) * 0.85,
-                  max: Math.max(...chartData) * 1.15,
-                },
-              ]}
-              height={300}
-              width={350}
-            />
-          )}
-        </Popup>
-      </Marker>
-    );
-  };
+  } */
 
   return (
     <>
@@ -201,7 +147,12 @@ function App() {
         style={{ height: '100vh' }}
       >
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
-        <StationMarker
+
+        {stations.map((station: StationRow) => (
+          <StationMarker station={station} forecasts={forecasts} />
+        ))}
+
+        {/* <StationMarker
           station='LENDAVA'
           latitude={46.562634}
           longitude={16.452506}
@@ -225,35 +176,16 @@ function App() {
           station='BOVEC'
           latitude={46.338401}
           longitude={13.552329}
-        />
+        /> */}
       </MapContainer>
-    </>
-  );
-
-  return (
-    <>
-      <div>
-        <a href='https://vite.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className='read-the-docs'>
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   );
 }
 
 export default App;
+
+//
+// handy command for creating TypeScript types from Supabase tables:
+//
+// > pnpm dlx supabase gen types typescript --project-id YOUR_PROJECT_ID --schema public > src/types/supabase.ts
+//
