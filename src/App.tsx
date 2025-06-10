@@ -9,7 +9,6 @@ import StationMarker from './components/StationMarker';
 import { getStationsData } from './api/stations';
 
 function App() {
-  // const [data, setData] = useState<WeatherRow[]>([]);
   const [stations, setStations] = useState<StationRow[]>([]);
   const [models, setModels] = useState<string[]>([]);
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
@@ -50,33 +49,11 @@ function App() {
     }
   };
 
-  // testing fetching data from Supabase
-  /* const getData = async () => {
-    const { data, error } = await supabase.from('weather').select('*').limit(5);
-    if (error) {
-      console.error('Supabase connection test failed:', error);
-    } else {
-      console.log('Supabase connection test succeeded:', data);
-      setData(data);
-    }
-  };
-
-  const getStationsData = async () => {
-    const { data, error } = await supabase.from('station').select('*');
-    if (error) {
-      console.error('Supabase connection test failed:', error);
-    } else {
-      console.log('Supabase connection test succeeded:', data);
-      setStations(data);
-    }
-  }; */
-
-  // console.log(data);
-
   useEffect(() => {
     const fetchStations = async () => {
       try {
         const stationsResult = await getStationsData();
+        console.log('result: ', stationsResult);
         if (stationsResult) setStations(stationsResult);
       } catch (err) {
         console.error('Failed to fetch initial data: ', err);
@@ -87,7 +64,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // getData();
     getRegisteredModels();
   }, []);
 
@@ -98,6 +74,7 @@ function App() {
   }, [models]);
 
   console.log('forecasts: ', forecasts);
+  console.log('stations:', stations);
 
   /* function getNextTimestamps(start: string, count: number): string[] {
     console.log('start: ', start);
@@ -151,32 +128,6 @@ function App() {
         {stations.map((station: StationRow) => (
           <StationMarker station={station} forecasts={forecasts} />
         ))}
-
-        {/* <StationMarker
-          station='LENDAVA'
-          latitude={46.562634}
-          longitude={16.452506}
-        />
-        <StationMarker
-          station='PTUJ'
-          latitude={46.418545}
-          longitude={15.869091}
-        />
-        <StationMarker
-          station='CELJE'
-          latitude={46.238006}
-          longitude={15.269033}
-        />
-        <StationMarker
-          station='CRNOMELJ'
-          latitude={45.572651}
-          longitude={15.190234}
-        />
-        <StationMarker
-          station='BOVEC'
-          latitude={46.338401}
-          longitude={13.552329}
-        /> */}
       </MapContainer>
     </>
   );

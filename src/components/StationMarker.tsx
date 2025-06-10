@@ -13,6 +13,8 @@ const StationMarker = ({ station, forecasts }: StationMarkerProps) => {
     (forecast: Forecast) => forecast.station === station.name
   );
 
+  // console.log('COORDINATES: ', station.latitude, station.longitude);
+
   /* const customIcon = new Icon({
       iconUrl: 'assets/location_pin.png',
       iconSize: [45, 45],
