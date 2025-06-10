@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -52,3 +53,7 @@ export default tseslint.config({
   },
 })
 ```
+=======
+# temperatureForecasterFE
+FE part of my intelligent system for temperature forecast
+>>>>>>> 26560e13135663b9da4d3b52285f3f254e1d01d8
