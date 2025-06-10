@@ -13,6 +13,14 @@ RUN pnpm install
 
 COPY . .
 
+# Define build args to accept env vars during docker build
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_KEY
+
+# Set env vars for build stage
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+ENV VITE_SUPABASE_KEY=$VITE_SUPABASE_KEY
+
 RUN pnpm run build
 
 # Stage 2: Serve with Nginx
