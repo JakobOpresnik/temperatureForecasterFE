@@ -76,6 +76,8 @@ function App() {
     }
   };
 
+  console.log(data);
+
   useEffect(() => {
     getData();
     getRegisteredModels();
