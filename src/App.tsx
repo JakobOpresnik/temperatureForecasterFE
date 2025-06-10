@@ -8,6 +8,20 @@ import type { Forecast } from './types/forecast';
 import StationMarker from './components/StationMarker';
 import { getStationsData } from './api/stations';
 
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
+});
+
 function App() {
   const [stations, setStations] = useState<StationRow[]>([]);
   const [models, setModels] = useState<string[]>([]);
@@ -125,8 +139,8 @@ function App() {
       >
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
 
-        {stations.map((station: StationRow) => (
-          <StationMarker station={station} forecasts={forecasts} />
+        {stations.map((station: StationRow, index: number) => (
+          <StationMarker key={index} station={station} forecasts={forecasts} />
         ))}
       </MapContainer>
     </>
