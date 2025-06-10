@@ -7,7 +7,6 @@ import type { StationRow } from './types/supabase_rows';
 import type { Forecast } from './types/forecast';
 import StationMarker from './components/StationMarker';
 import { getStationsData } from './api/stations';
-
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
@@ -18,7 +17,7 @@ import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl,
+  iconRetinaUrl: 'assets/location_pin.png',
   iconUrl,
   shadowUrl,
 });
