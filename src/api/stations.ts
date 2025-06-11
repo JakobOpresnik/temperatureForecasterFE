@@ -20,7 +20,7 @@ export const getStationsData = async (): Promise<StationRow[]> => {
 }
 
 export const getStationData = async (station_name: string): Promise<StationRow> => {
-  const response: Response = await fetch(`${API_BASE_URL}/stations/${station_name}`)
+  const response: Response = await fetch(`${API_BASE_URL}/stations/${encodeURIComponent(station_name)}`)
   if (!response.ok) {
     throw new Error(`Error fetching station with name '${station_name}': ${response.status}`)
   }

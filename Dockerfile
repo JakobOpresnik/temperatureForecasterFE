@@ -17,7 +17,7 @@ COPY . .
 ARG VITE_SUPABASE_URL
 ARG VITE_SUPABASE_KEY
 
-# Set env vars for build stage
+# Set db env vars for build stage
 ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
 ENV VITE_SUPABASE_KEY=$VITE_SUPABASE_KEY
 

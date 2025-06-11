@@ -11,7 +11,7 @@ import type { Forecast } from '../types/forecast';
 }; */
 
 export const getTemperatureForecast = async (station: string): Promise<Forecast> => {
-  const response: Response = await fetch(`${API_BASE_URL}/predict/${station}`);
+  const response: Response = await fetch(`${API_BASE_URL}/predict/${station}`)
   if (!response.ok) {
     throw new Error(`Error getting predictions: ${response.status}`);
   }
@@ -22,26 +22,4 @@ export const getTemperatureForecast = async (station: string): Promise<Forecast>
     actuals: data.actuals,
     timestamps: data.timestamps,
   };
-
-  /* try {
-      const response: Response = await fetch(
-        `${API_BASE_URL}/predict/${station}`
-      );
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log('fetched data: ', data);
-      const forecast: Forecast = {
-        station: station,
-        predictions: data.predictions,
-        actuals: data.actuals,
-        timestamps: data.timestamps,
-      };
-      // setForecasts((prev: Forecast[]) => [...prev, forecast]);
-      return forecast
-    } catch (err) {
-      console.log(err);
-      return
-    } */
   };
