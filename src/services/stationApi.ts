@@ -11,7 +11,7 @@ export const StationApi = {
   },
 
   async getByName(name: string): Promise<StationRow> {
-    const response = await fetch(`${API_BASE_URL}/stations/${encodeURIComponent(name)}`);
+    const response = await fetch(`${API_BASE_URL}/stations/${name}`);
     if (!response.ok) {
       throw new Error(`Error fetching station with name '${name}': ${response.status}`);
     }

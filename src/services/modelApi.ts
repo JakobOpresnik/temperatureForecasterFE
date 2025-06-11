@@ -11,9 +11,7 @@ export const ModelApi = {
   },
 
   async getRegisteredByName(name: string): Promise<string> {
-    const response: Response = await fetch(
-      `${API_BASE_URL}/load_models/${encodeURIComponent(name)}`,
-    );
+    const response: Response = await fetch(`${API_BASE_URL}/load_models/${name}`);
     if (!response.ok) {
       throw new Error(`Error loading registered model with name '${name}': ${response.status}`);
     }
