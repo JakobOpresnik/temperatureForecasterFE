@@ -4,3 +4,8 @@ export type Forecast = {
   actuals: number[];
   timestamps: string[];
 };
+
+/* export type ChartData = {
+  values?: number[];
+  timestamps?: string[];
+}; */

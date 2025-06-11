@@ -1,11 +1,13 @@
 import type { Forecast } from '../types/forecast';
-import { LineChart } from '@mui/x-charts';
 import type { StationRow } from '../types/supabase_rows';
 import { Marker, Popup } from 'react-leaflet';
 import { useMemo } from 'react';
 import CircularProgress from '@mui/joy/CircularProgress';
 import '../App.css';
-import { Table, Typography } from '@mui/joy';
+import { Typography } from '@mui/joy';
+import TemperatureChart from './TemperatureChart';
+import { Card, CardContent, CardHeader } from './ui/card';
+import StatsTable from './StatsTable';
 
 type StationMarkerProps = {
   station: StationRow;
@@ -17,116 +19,75 @@ const StationMarker = ({ station, forecasts }: StationMarkerProps) => {
     (forecast: Forecast) => forecast.station === station.name
   );
 
-  // console.log('COORDINATES: ', station.latitude, station.longitude);
+  function getNextTimestamps(start: string, count: number): string[] {
+    console.log('start: ', start);
+    const [hours, minutes] = start.split(':').map(Number);
+    const startDate = new Date();
+    startDate.setHours(hours, minutes, 0, 0);
 
-  /* const customIcon = new Icon({
-      iconUrl: 'assets/location_pin.png',
-      iconSize: [45, 45],
-    }); */
+    const timestamps: string[] = [];
 
-  const chartData: number[] = [
-    ...(forecast?.actuals ?? []),
-    ...(forecast?.predictions ?? []),
-  ];
+    for (let i = 1; i <= count; i++) {
+      const next = new Date(startDate.getTime() + i * 30 * 60 * 1000);
+      const hh = next.getHours().toString().padStart(2, '0');
+      const mm = next.getMinutes().toString().padStart(2, '0');
+      timestamps.push(`${hh}:${mm}`);
+    }
 
-  /* const forecastTimestamps: string[] = getNextTimestamps(
+    return timestamps;
+  }
+
+  const forecastTimestamps: string[] = getNextTimestamps(
     forecast?.timestamps[17] ?? '',
     6
   );
 
-  console.log('timestamps forecast: ', forecastTimestamps);
-  console.log([...(forecast?.timestamps ?? []), ...forecastTimestamps]); */
-
-  const tempAvg: number | undefined = useMemo(() => {
-    if (forecast) {
-      const sum: number = forecast.actuals.reduce(
-        (acc: number, value: number) => acc + value,
-        0
-      );
-      const count: number = forecast.actuals.length;
-      return sum / count;
-    }
-  }, [forecast]);
-
-  const tempMax: number | undefined = useMemo(() => {
-    if (forecast) {
-      return Math.max(...forecast.actuals);
-    }
-  }, [forecast]);
-
-  const tempMin: number | undefined = useMemo(() => {
-    if (forecast) {
-      return Math.min(...forecast.actuals);
-    }
-  }, [forecast]);
+  // all timestamps
+  const timestamps: string[] = [
+    ...(forecast?.timestamps ?? []),
+    ...forecastTimestamps,
+  ];
 
   const actuals = [...(forecast?.actuals ?? []), ...Array(6).fill(null)];
   const predictions = [
-    ...Array(17).fill(null),
+    ...Array(18).fill(null),
     ...(forecast?.predictions ?? []),
   ];
 
+  const shouldDisplayPopup: boolean = useMemo(
+    () => !!forecast?.actuals && !!forecast.timestamps,
+    [forecast]
+  );
+
   return (
     <Marker position={[station.latitude, station.longitude]}>
-      <Popup className='popup'>
-        <Typography level='h3' sx={{ marginTop: 3 }}>
-          {station.name}
-        </Typography>
-        <Typography level='body-sm'>
-          {station.latitude}, {station.longitude}
-        </Typography>
-        {tempAvg && tempMax && tempMin ? (
-          <>
-            <Typography level='body-md'>Stats for the last 9 hours:</Typography>
-            <Table>
-              <tr>
-                <th>Average</th>
-                <th>{tempAvg.toFixed(1)}°C</th>
-              </tr>
-              <tr>
-                <th>Max</th>
-                <th>{tempMax.toFixed(1)}°C</th>
-              </tr>
-              <tr>
-                <th>Min</th>
-                <th>{tempMin.toFixed(1)}°C</th>
-              </tr>
-            </Table>
-          </>
+      <Popup>
+        {shouldDisplayPopup ? (
+          <Card style={{ width: 350, border: 0 }} className='!shadow-none'>
+            <CardHeader>
+              <Typography level='h3'>{station.name}</Typography>
+              <Typography level='body-sm'>
+                {station.latitude}, {station.longitude}
+              </Typography>
+            </CardHeader>
+            <CardContent>
+              <>
+                <TemperatureChart
+                  actuals={actuals}
+                  predictions={predictions}
+                  timestamps={timestamps}
+                />
+                {forecast && (
+                  <StatsTable
+                    title='Stats for the last 9 hours'
+                    forecast={forecast}
+                  />
+                )}
+              </>
+            </CardContent>
+          </Card>
         ) : (
           <CircularProgress variant='soft' />
-        )}
-        {forecast?.timestamps && (
-          <LineChart
-            series={[
-              {
-                data: actuals,
-                label: 'Actuals',
-                labelMarkType: 'circle',
-                area: true,
-                showMark: false,
-              },
-              {
-                data: predictions,
-                label: 'Forecast',
-                labelMarkType: 'circle',
-                area: true,
-                showMark: false,
-              },
-            ]}
-            yAxis={[
-              {
-                min: Math.min(...chartData) * 0.4,
-                max: Math.max(...chartData) * 1.3,
-                label: 'Temperature (°C)',
-              },
-            ]}
-            height={300}
-            width={550}
-            sx={{
-              paddingLeft: 30,
-            }}
-          />
         )}
       </Popup>
     </Marker>

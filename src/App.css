@@ -31,8 +31,8 @@
 div.leaflet-popup-content-wrapper,
 div.leaflet-popup-tip,
 div.leaflet-popup-content {
-  background: #d2ddf7;
-  width: 600px;
+  background: white;
+  width: 390px;
 }
 
 th,
