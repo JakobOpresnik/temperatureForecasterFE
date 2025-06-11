@@ -1,1 +1,1 @@
-export const MAP_LAYER = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+export const MAP_LAYER = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';

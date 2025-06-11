@@ -1,53 +1,23 @@
 'use client';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 import {
-  type ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from './ui/chart';
-
-type TemperatureChartProps = {
-  actuals: number[];
-  predictions: number[];
-  timestamps: string[];
-};
+import { useChartData } from '../hooks/useChartData';
+import type { TemperatureChartProps } from '../types/chart';
 
 const TemperatureChart = (props: TemperatureChartProps) => {
   const { actuals, predictions, timestamps } = props;
 
-  const chartConfig = {
-    temperature: {
-      label: 'temperature',
-      color: 'var(--chart-2)',
-    },
-    missing: {
-      label: 'temperature',
-      color: 'var(--chart-2)',
-    },
-    forecast: {
-      label: 'forecast',
-      color: 'var(--chart-1)',
-    },
-  } satisfies ChartConfig;
-
-  const chartData = timestamps.map((timestamp: string, index: number) => {
-    return {
-      timestamps: timestamp,
-      temperature: actuals[index],
-      forecast: predictions[index],
-      missing:
-        index === 17
-          ? actuals[index]
-          : index === 18
-          ? predictions[index]
-          : null,
-    };
+  const { config: chartConfig, data: chartData } = useChartData({
+    actuals,
+    predictions,
+    timestamps,
   });
-
-  console.log('timestamps: ', timestamps);
 
   return (
     <ChartContainer config={chartConfig} style={{ width: 310 }}>
@@ -61,38 +31,35 @@ const TemperatureChart = (props: TemperatureChartProps) => {
       >
         <CartesianGrid vertical={false} />
         <XAxis
-          dataKey='timestamps'
+          dataKey="timestamps"
           tickLine={false}
           axisLine={false}
           tickMargin={8}
           fontSize={11}
         />
-        <ChartTooltip
-          cursor={false}
-          content={<ChartTooltipContent indicator='line' />}
-        />
+        <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
         <Area
-          dataKey='temperature'
-          type='natural'
-          fill='blue'
+          dataKey="temperature"
+          type="natural"
+          fill="blue"
           fillOpacity={0.4}
-          stroke='blue'
+          stroke="blue"
           strokeWidth={3}
         />
         <Area
-          dataKey='missing'
-          type='natural'
-          fill='blue'
+          dataKey="missing"
+          type="natural"
+          fill="blue"
           fillOpacity={0.4}
-          stroke='blue'
+          stroke="blue"
           strokeWidth={3}
         />
         <Area
-          dataKey='forecast'
-          type='natural'
-          fill='orange'
+          dataKey="forecast"
+          type="natural"
+          fill="orange"
           fillOpacity={0.4}
-          stroke='orange'
+          stroke="orange"
           strokeWidth={3}
         />
         <ChartLegend content={<ChartLegendContent />} />

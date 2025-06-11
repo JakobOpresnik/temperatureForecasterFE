@@ -1,11 +1,6 @@
 import { Table, Typography } from '@mui/joy';
-import type { Forecast } from '../types/forecast';
 import { useStats } from '../hooks/useStats';
-
-type StatsTableProps = {
-  title: string;
-  forecast: Forecast;
-};
+import type { StatsTableProps } from '../types/stats';
 
 const StatsTable = (props: StatsTableProps) => {
   const { title, forecast } = props;
@@ -21,7 +16,7 @@ const StatsTable = (props: StatsTableProps) => {
     <>
       {shouldShowStatsTable && (
         <>
-          <Typography level='body-md' sx={{ paddingTop: 2 }}>
+          <Typography level="body-md" sx={{ paddingTop: 2 }}>
             {title}
           </Typography>
           <Table>
