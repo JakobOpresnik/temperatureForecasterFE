@@ -3,7 +3,7 @@ import type { ForecastRow } from '../types/supabase_rows';
 
 export const ForecastApi = {
   async getAll(): Promise<ForecastRow[]> {
-    const response = await fetch(`${API_BASE_URL}/evaluate`);
+    const response: Response = await fetch(`${API_BASE_URL}/evaluate`);
     if (!response.ok) {
       throw new Error(`Error fetching evaluations: ${response.status}`);
     }
@@ -11,7 +11,7 @@ export const ForecastApi = {
   },
 
   async getByStationName(name: string): Promise<ForecastRow> {
-    const response = await fetch(`${API_BASE_URL}/evaluate/${name}`);
+    const response: Response = await fetch(`${API_BASE_URL}/evaluate/${name}`);
     if (!response.ok) {
       throw new Error(`Error fetching evaluation for station '${name}': ${response.status}`);
     }

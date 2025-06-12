@@ -3,9 +3,9 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import StationMarker from '../components/StationMarker';
 import { MAP_LAYER, STARTING_COORDINATES } from '../constants/map';
 import { useHomePageData } from '../hooks/useHomePageData';
-import { Button } from '@mui/joy';
+import { Button, Stack } from '@mui/joy';
 import { useMemo, useState } from 'react';
-import MetricsTable from '../components/MetricsTable';
+import AdminPanel from '../components/AdminPanel';
 
 const HomePage = () => {
   const { stations, forecasts, metrics } = useHomePageData();
@@ -19,15 +19,23 @@ const HomePage = () => {
 
   return (
     <>
-      <Button onClick={toggleShowAdminPanel}>Show Admin Panel</Button>
-      <MetricsTable
+      <Stack flexDirection="row">
+        <Button sx={{ marginBottom: 4 }} onClick={toggleShowAdminPanel}>
+          SHOW ADMIN PANEL
+        </Button>
+      </Stack>
+      <AdminPanel
         stations={stations}
         metrics={metrics}
         isLoaded={areStationsLoaded}
         isOpen={shouldShowAdminPanel}
         onClose={() => setShouldShowAdminPanel(false)}
       />
-      <MapContainer center={STARTING_COORDINATES} zoom={9} style={{ height: '100vh' }}>
+      <MapContainer
+        center={STARTING_COORDINATES}
+        zoom={8.5}
+        style={{ height: '82vh', width: '91vw', borderRadius: '10px' }}
+      >
         <TileLayer url={MAP_LAYER} />
         {stations.map((station: StationRow, index: number) => (
           <StationMarker key={`${index}_${station}`} station={station} forecasts={forecasts} />
