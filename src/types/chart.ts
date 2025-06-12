@@ -1,5 +1,5 @@
 export type TemperatureChartProps = {
-  actuals: number[];
-  predictions: number[];
+  actuals: (number | null)[];
+  predictions: (number | null)[];
   timestamps: string[];
 };

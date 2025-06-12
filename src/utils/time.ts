@@ -1,4 +1,4 @@
-export function getNextTimestamps(start: string, count: number): string[] {
+export const getNextTimestamps = (start: string, count: number): string[] => {
   const [hours, minutes] = start.split(':').map(Number);
   const startDate = new Date();
   startDate.setHours(hours, minutes, 0, 0);
@@ -13,4 +13,4 @@ export function getNextTimestamps(start: string, count: number): string[] {
   }
 
   return timestamps;
-}
+};

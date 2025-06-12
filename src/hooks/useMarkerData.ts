@@ -13,8 +13,11 @@ export const useMarkerData = ({ station, forecasts }: StationMarkerProps) => {
   // all timestamps
   const timestamps: string[] = [...(forecast?.timestamps ?? []), ...forecastTimestamps];
 
-  const actuals = [...(forecast?.actuals ?? []), ...Array(6).fill(null)];
-  const predictions = [...Array(18).fill(null), ...(forecast?.predictions ?? [])];
+  const actuals: (number | null)[] = [...(forecast?.actuals ?? []), ...Array(6).fill(null)];
+  const predictions: (number | null)[] = [
+    ...Array(18).fill(null),
+    ...(forecast?.predictions ?? []),
+  ];
 
   const shouldShowPopup: boolean = useMemo(
     () => !!forecast?.actuals && !!forecast.timestamps,

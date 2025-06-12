@@ -6,8 +6,7 @@ export const ModelApi = {
     if (!response.ok) {
       throw new Error(`Errro loading registered models: ${response.status}`);
     }
-    const data = response.json();
-    return data;
+    return response.json();
   },
 
   async getRegisteredByName(name: string): Promise<string> {
