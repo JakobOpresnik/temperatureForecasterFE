@@ -3,6 +3,30 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      forecast: {
+        Row: {
+          created_at: string;
+          id: number;
+          predictions: number[];
+          station: string;
+          timestamps: string[];
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          predictions: number[];
+          station: string;
+          timestamps: string[];
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          predictions?: number[];
+          station?: string;
+          timestamps?: string[];
+        };
+        Relationships: [];
+      };
       station: {
         Row: {
           created_at: string;
@@ -21,9 +45,9 @@ export type Database = {
         Update: {
           created_at?: string;
           id?: number;
-          latitude: number;
-          longitude: number;
-          name: string;
+          latitude?: number;
+          longitude?: number;
+          name?: string;
         };
         Relationships: [];
       };

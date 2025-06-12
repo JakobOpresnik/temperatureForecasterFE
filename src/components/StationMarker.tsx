@@ -33,7 +33,7 @@ const StationMarker = ({ station, forecasts }: StationMarkerProps) => {
                 <TemperatureChart
                   actuals={actuals}
                   predictions={predictions}
-                  timestamps={timestamps}
+                  timestamps={timestamps ?? []}
                 />
                 {forecast && <StatsTable title="Stats for the last 9 hours" forecast={forecast} />}
               </>

@@ -2,8 +2,8 @@
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 import {
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
+  // ChartLegend,
+  // ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from './ui/chart';
@@ -62,7 +62,7 @@ const TemperatureChart = (props: TemperatureChartProps) => {
           stroke="orange"
           strokeWidth={3}
         />
-        <ChartLegend content={<ChartLegendContent />} />
+        {/* <ChartLegend content={<ChartLegendContent />} /> */}
       </AreaChart>
     </ChartContainer>
   );

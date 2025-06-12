@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react';
-import type { StationRow } from '../types/supabase_rows';
+import type { ForecastRow, StationRow } from '../types/supabase_rows';
 import type { Forecast } from '../types/forecast';
 import { ModelApi } from '../services/modelApi';
 import { StationApi } from '../services/stationApi';
 import { WeatherApi } from '../services/weatherApi';
+import { ForecastApi } from '../services/forecastApi';
+import type { EvalMetrics } from '../types/model';
 
 export const useHomePageData = () => {
   const [stations, setStations] = useState<StationRow[]>([]);
   const [models, setModels] = useState<string[]>([]);
+  const [metrics, setMetrics] = useState<EvalMetrics[]>([]);
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
+  const [evaluations, setEvaluations] = useState<ForecastRow[]>([]);
 
   const fetchModels = async (): Promise<void> => {
     try {
-      const models: string[] = await ModelApi.getAllRegistered();
+      const { models, metrics } = await ModelApi.getAllRegistered();
       setModels(models);
+      setMetrics(metrics);
     } catch (err) {
       console.error(err);
     }
@@ -28,7 +33,7 @@ export const useHomePageData = () => {
     }
   };
 
-  const fetchForecast = async (station: string): Promise<void> => {
+  const fetchPredictions = async (station: string): Promise<void> => {
     try {
       const forecast: Forecast = await WeatherApi.getPredictionByStation(station);
       setForecasts((prev: Forecast[]) => [...prev, forecast]);
@@ -37,23 +42,37 @@ export const useHomePageData = () => {
     }
   };
 
+  const fetchForecasts = async (): Promise<void> => {
+    try {
+      const evaluations: ForecastRow[] = await ForecastApi.getAll();
+      setEvaluations(evaluations);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     fetchModels();
     fetchStations();
+    fetchForecasts();
   }, []);
 
   useEffect(() => {
     for (const model of models) {
       const stationName: string = model.split('-')[1];
-      fetchForecast(stationName);
+      fetchPredictions(stationName);
     }
   }, [models]);
 
+  console.log('models: ', models);
+  console.log('metrics: ', metrics);
   console.log('forecasts: ', forecasts);
   console.log('stations:', stations);
+  console.log('evaluations: ', evaluations);
 
   return {
     stations: stations,
     forecasts: forecasts,
+    metrics: metrics
   };
 };
