@@ -64,6 +64,15 @@ export const useHomePageData = () => {
     }
   }, [models]);
 
+  const roundMetrics = (metrics: EvalMetrics[]): EvalMetrics[] => {
+    return metrics.map((metric: EvalMetrics) => ({
+      ...metric,
+      mae: +metric.mae.toFixed(3),
+      mse: +metric.mse.toFixed(3),
+      rmse: +metric.rmse.toFixed(3),
+    }));
+  };
+
   console.log('models: ', models);
   console.log('metrics: ', metrics);
   console.log('forecasts: ', forecasts);
@@ -73,6 +82,6 @@ export const useHomePageData = () => {
   return {
     stations: stations,
     forecasts: forecasts,
-    metrics: metrics
+    metrics: roundMetrics(metrics),
   };
 };
