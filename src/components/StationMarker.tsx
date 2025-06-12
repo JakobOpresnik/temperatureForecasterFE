@@ -1,7 +1,7 @@
 import '../App.css';
 import { Marker, Popup } from 'react-leaflet';
 import CircularProgress from '@mui/joy/CircularProgress';
-import { Typography } from '@mui/joy';
+import { Stack, Typography } from '@mui/joy';
 import TemperatureChart from './TemperatureChart';
 import { Card, CardContent, CardHeader } from './ui/card';
 import StatsTable from './StatsTable';
@@ -40,7 +40,9 @@ const StationMarker = ({ station, forecasts }: StationMarkerProps) => {
             </CardContent>
           </Card>
         ) : (
-          <CircularProgress variant="soft" />
+          <Stack marginLeft={5}>
+            <CircularProgress variant="soft" sx={{ alignSelf: 'center' }} />
+          </Stack>
         )}
       </Popup>
     </Marker>
