@@ -1,22 +1,24 @@
 import { Box, Divider, Drawer } from '@mui/joy';
-import type { EvalMetrics } from '../types/model';
+import type { EvalMetrics, ModelHyperparameters } from '../types/model';
 import type { StationRow } from '../types/supabase_rows';
 import MetricsTable from './MetricsTable';
 import { useAdminPanelData } from '../hooks/useAdminPanelData';
 import ReportsList from './ReportsList';
 import ReportIcon from '@mui/icons-material/Report';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import HyperparametersTable from './HyperparametersTable';
 
 type AdminPanelProps = {
   stations: StationRow[];
   metrics: EvalMetrics[];
+  hyperparameters: ModelHyperparameters[];
   isLoaded: boolean;
   isOpen: boolean;
   onClose: () => void;
 };
 
 const AdminPanel = (props: AdminPanelProps) => {
-  const { stations, metrics, isLoaded, isOpen, onClose } = props;
+  const { stations, metrics, hyperparameters, isLoaded, isOpen, onClose } = props;
 
   const { testReportUrls, validationReportUrls } = useAdminPanelData();
 
@@ -45,6 +47,7 @@ const AdminPanel = (props: AdminPanelProps) => {
               reportUrls={testReportUrls}
             />
             <Divider />
+            <HyperparametersTable hyperparameters={hyperparameters} />
           </Box>
         </Drawer>
       )}

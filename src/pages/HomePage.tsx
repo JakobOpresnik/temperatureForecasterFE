@@ -8,7 +8,7 @@ import { useMemo, useState } from 'react';
 import AdminPanel from '../components/AdminPanel';
 
 const HomePage = () => {
-  const { stations, forecasts, metrics } = useHomePageData();
+  const { stations, forecasts, metrics, hyperparameters } = useHomePageData();
 
   const [shouldShowAdminPanel, setShouldShowAdminPanel] = useState<boolean>(false);
   const areStationsLoaded: boolean = useMemo(() => stations.length > 0, [stations]);
@@ -27,6 +27,7 @@ const HomePage = () => {
       <AdminPanel
         stations={stations}
         metrics={metrics}
+        hyperparameters={hyperparameters}
         isLoaded={areStationsLoaded}
         isOpen={shouldShowAdminPanel}
         onClose={() => setShouldShowAdminPanel(false)}

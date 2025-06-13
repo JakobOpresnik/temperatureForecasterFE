@@ -5,20 +5,22 @@ import { ModelApi } from '../services/modelApi';
 import { StationApi } from '../services/stationApi';
 import { WeatherApi } from '../services/weatherApi';
 import { ForecastApi } from '../services/forecastApi';
-import type { EvalMetrics } from '../types/model';
+import type { ModelHyperparameters, EvalMetrics } from '../types/model';
 
 export const useHomePageData = () => {
   const [stations, setStations] = useState<StationRow[]>([]);
   const [models, setModels] = useState<string[]>([]);
   const [metrics, setMetrics] = useState<EvalMetrics[]>([]);
+  const [hyperparameters, setHyperparameters] = useState<ModelHyperparameters[]>([]);
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
   const [evaluations, setEvaluations] = useState<ForecastRow[]>([]);
 
   const fetchModels = async (): Promise<void> => {
     try {
-      const { models, metrics } = await ModelApi.getAllRegistered();
+      const { models, metrics, hyperparameters } = await ModelApi.getAllRegistered();
       setModels(models);
       setMetrics(metrics);
+      setHyperparameters(hyperparameters);
     } catch (err) {
       console.error(err);
     }
@@ -75,6 +77,7 @@ export const useHomePageData = () => {
 
   console.log('models: ', models);
   console.log('metrics: ', metrics);
+  console.log('hyperparameters: ', hyperparameters);
   console.log('forecasts: ', forecasts);
   console.log('stations:', stations);
   console.log('evaluations: ', evaluations);
@@ -83,5 +86,6 @@ export const useHomePageData = () => {
     stations: stations,
     forecasts: forecasts,
     metrics: roundMetrics(metrics),
+    hyperparameters: hyperparameters,
   };
 };
