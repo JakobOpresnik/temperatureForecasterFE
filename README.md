@@ -52,7 +52,3 @@ export default tseslint.config({
   },
 })
 ```
-=======
-# temperatureForecasterFE
-FE part of my intelligent system for temperature forecast
->>>>>>> 26560e13135663b9da4d3b52285f3f254e1d01d8
